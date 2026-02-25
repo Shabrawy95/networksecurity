@@ -27,7 +27,7 @@ import mlflow
 from urllib.parse import urlparse
 
 import dagshub
-#dagshub.init(repo_owner='krishnaik06', repo_name='networksecurity', mlflow=True)
+#dagshub.init(repo_owner='ahmadshabrawy974', repo_name='networksecurity', mlflow=True)
 
 os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/ahmadshabrawy974/networksecurity.mlflow"
 os.environ["MLFLOW_TRACKING_USERNAME"]="ahmadshabrawy974"
@@ -48,6 +48,7 @@ class ModelTrainer:
     def track_mlflow(self,best_model,classificationmetric):
         mlflow.set_registry_uri("https://dagshub.com/ahmadshabrawy974/networksecurity.mlflow")
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+        best_model_name = "best_model"
         with mlflow.start_run():
             f1_score=classificationmetric.f1_score
             precision_score=classificationmetric.precision_score
@@ -66,7 +67,7 @@ class ModelTrainer:
                 # There are other ways to use the Model Registry, which depends on the use case,
                 # please refer to the doc for more information:
                 # https://mlflow.org/docs/latest/model-registry.html#api-workflow
-                mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model)
+                mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model_name)
             else:
                 mlflow.sklearn.log_model(best_model, "model")
 
