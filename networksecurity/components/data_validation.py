@@ -28,7 +28,7 @@ class DataValidation:
         
     def validate_number_of_columns(self,dataframe:pd.DataFrame)->bool:
         try:
-            number_of_columns=len(self._schema_config)
+            number_of_columns=len(self._schema_config["columns"])
             logging.info(f"Required number of columns:{number_of_columns}")
             logging.info(f"Data frame has columns:{len(dataframe.columns)}")
             if len(dataframe.columns)==number_of_columns:
@@ -37,18 +37,18 @@ class DataValidation:
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
-    def detect_dataset_drift(self,base_df,current_df,threshold=0.05)->bool:
+    def detect_dataset_drift(self,base_df,current_df,threshold=0.05)->bool: # 95% confidenc so 0.05
         try:
             status=True
             report={}
             for column in base_df.columns:
                 d1=base_df[column]
                 d2=current_df[column]
-                is_same_dist=ks_2samp(d1,d2)
+                is_same_dist=ks_2samp(d1,d2) # compare distribution of 2 columns
                 if threshold<=is_same_dist.pvalue:
                     is_found=False
                 else:
-                    is_found=True
+                    is_found=True # p-value < 0.05 distribution is different
                     status=False
                 report.update({column:{
                     "p_value":float(is_same_dist.pvalue),
@@ -61,7 +61,7 @@ class DataValidation:
             dir_path = os.path.dirname(drift_report_file_path)
             os.makedirs(dir_path,exist_ok=True)
             write_yaml_file(file_path=drift_report_file_path,content=report)
-
+            return status
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         

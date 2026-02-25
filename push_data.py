@@ -27,7 +27,7 @@ class NetworkDataExtract():
     def csv_to_json_convertor(self,file_path):
         try:
             data=pd.read_csv(file_path)
-            data.reset_index(drop=True,inplace=True)
+            data.reset_index(drop=True,inplace=True) # list of json records corresponding to rows
             records=list(json.loads(data.T.to_json()).values())
             return records
         except Exception as e:
@@ -50,13 +50,10 @@ class NetworkDataExtract():
         
 if __name__=='__main__':
     FILE_PATH="Network_Data\phisingData.csv"
-    DATABASE="KRISHAI"
+    DATABASE="SHABRAVVVY"
     Collection="NetworkData"
     networkobj=NetworkDataExtract()
     records=networkobj.csv_to_json_convertor(file_path=FILE_PATH)
     print(records)
     no_of_records=networkobj.insert_data_mongodb(records,DATABASE,Collection)
     print(no_of_records)
-        
-
-
