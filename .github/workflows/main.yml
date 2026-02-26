@@ -64,7 +64,8 @@ jobs:
 
   Continuous-Deployment:
     needs: build-and-push-ecr-image
-    runs-on: self-hosted
+    runs-on: self-hosted # event listener running on cloud in ec2 instance, listening for changes in github repo
+    # this means image will run in ec2 where I configured it as runner using hitub action runenrs
     steps:
       - name: Checkout
         uses: actions/checkout@v3
